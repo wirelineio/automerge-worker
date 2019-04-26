@@ -1,0 +1,46 @@
+{
+  "name": "@wirelineio/automerge-worker",
+  "version": "0.1.12",
+  "description": "Automerge doc on a worker",
+  "homepage": "https://github.com/wirelineio/automerge-worker#readme",
+  "bugs": {
+    "url": "https://github.com/wirelineio/automerge-worker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wirelineio/automerge-worker.git"
+  },
+  "license": "GPL-3.0",
+  "main": "src/index.js",
+  "browser": "dist/umd/index.js",
+  "scripts": {
+    "build": "npm run clean && npm run build:web && npm run build:node",
+    "build:node": "NODE_ENV=production webpack",
+    "build:web": "NODE_ENV=production webpack --config webpack.web.config.js",
+    "clean": "rm -rf dist",
+    "dev": "npm run clean && npm run build:web -- --watch",
+    "lint": "eslint ./src",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
+  },
+  "dependencies": {
+    "automerge": "^0.10.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.7.1",
+    "babel-loader": "^8.0.5",
+    "eslint":"^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "jest": "^24.5.0",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
