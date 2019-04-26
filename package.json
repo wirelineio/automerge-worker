@@ -20,7 +20,7 @@
     "clean": "rm -rf dist",
     "dev": "npm run clean && npm run build:web -- --watch",
     "lint": "eslint ./src",
-    "test": "jest",
+    "test": "AUTOMERGE_WORKER_PATH=./src jest",
     "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
