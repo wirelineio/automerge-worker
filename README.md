@@ -1,5 +1,8 @@
 # automerge-worker
 
+[![CircleCI](https://circleci.com/gh/wirelineio/automerge-worker.svg?style=svg&circle-token=e6fe46f7b046825c9cbf91d940d7093f889fdfc6)](https://circleci.com/gh/wirelineio/automerge-worker)
+[![npm version](https://badge.fury.io/js/%40wirelineio%2Fautomerge-worker.svg)](https://badge.fury.io/js/%40wirelineio%2Fautomerge-worker)
+
 ## Usage
 
 ```js
