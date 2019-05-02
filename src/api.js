@@ -9,13 +9,15 @@ const createAutomergeWorker = () => {
 
   const worker = createWorker();
 
-  worker.createDocument = async (actorId, documentId, initialState) => worker.execute('createDocument', [actorId, documentId, initialState]);
+  worker.setChangeFunction = async (key, updateFunction, initFunction) => worker.execute('setChangeFunction', [key, updateFunction.toString(), initFunction ? initFunction.toString() : null]);
 
-  worker.createDocumentFromChanges = async (actorId, documentId, changes) => worker.execute('createDocumentFromChanges', [actorId, documentId, changes]);
+  worker.createDocument = async (changeFunctionKey, actorId, documentId) => worker.execute('createDocument', [changeFunctionKey, actorId, documentId]);
+
+  worker.createDocumentFromChanges = async (changeFunctionKey, actorId, documentId, changes) => worker.execute('createDocumentFromChanges', [changeFunctionKey, actorId, documentId, changes]);
 
   worker.getDocumentState = async documentId => worker.execute('getDocumentState', [documentId]);
 
-  worker.getDocumentContent = async documentId => worker.execute('getDocumentContent', [documentId]);
+  worker.getDocumentContent = async (documentId, getContent) => worker.execute('getDocumentContent', [documentId, getContent ? getContent.toString() : null]);
 
   worker.getActorId = async documentId => worker.execute('getActorId', [documentId]);
 
