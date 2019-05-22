@@ -27,7 +27,7 @@ describe('Automerge api', () => {
     expect(changes[0].actor).toBe('actor1');
     expect(changes[0].deps).toEqual({});
 
-    const [ firstOp, secOp ] = changes[0].ops;
+    const [firstOp, secOp] = changes[0].ops;
     expect(firstOp.action).toBe('makeText');
     expect(secOp.action).toBe('link');
     expect(secOp.obj).toBe('00000000-0000-0000-0000-000000000000');
@@ -70,7 +70,7 @@ afterAll(async () => {
 const createDoc = (actorId, content = shortLorem) => {
   let doc = Automerge.init(actorId);
 
-  doc = Automerge.change(doc, doc => {
+  doc = Automerge.change(doc, (doc) => {
     doc.text = new Automerge.Text();
     doc.text.insertAt(doc.text.length, ...content);
   });
