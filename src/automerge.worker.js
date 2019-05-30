@@ -48,6 +48,17 @@ const initJob = (documentId, operations) => {
   };
 };
 
+const initChangesJob = (documentId, changes) => {
+  const oldDoc = docs.get(documentId);
+
+  return () => {
+    const newDoc = Automerge.applyChanges(oldDoc, changes);
+    docs.set(documentId, newDoc);
+
+    return Automerge.getChanges(oldDoc, newDoc);
+  };
+};
+
 const api = {
   createDocument(actorId, documentId) {
     this.emit('status', { status: 'Creating document', actorId, documentId });
@@ -99,14 +110,12 @@ const api = {
   applyChanges(documentId, changes) {
     this.emit('status', { status: 'Applying changes', documentId });
 
-    const oldDoc = docs.get(documentId);
-    const newDoc = Automerge.applyChanges(oldDoc, changes);
+    const job = initChangesJob(documentId, changes);
+    const result = job();
 
-    docs.set(documentId, newDoc);
-
-    const changesMade = Automerge.getChanges(oldDoc, newDoc);
     this.emit('status', { status: 'Changes applied', documentId });
-    return changesMade;
+
+    return result;
   },
 
   applyChangesFromOps(documentId, operations) {
