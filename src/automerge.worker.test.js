@@ -11,7 +11,7 @@ const shortLorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mor
 
 describe('Automerge api', () => {
   test('Create document: Should get correct state', async () => {
-    const { state } = await automergeWorker.createDocument('actor1', '1');
+    const { state } = await automergeWorker.createDocument('monaco-text', 'actor1', '1');
 
     const initialStateReg = /\["~#iL",\[\["~#iM",\["ops",\["\^0",\[\["\^1",\["action","makeText","obj","(.+)"\]\],\["\^1",\["action","link","obj","00000000-0000-0000-0000-000000000000","key","text","value","(.+)"\]\]\]\],"actor","actor1","seq",1,"deps",\["\^1",\[\]\]\]\]\]\]/;
 
@@ -19,7 +19,7 @@ describe('Automerge api', () => {
   });
 
   test('Create document: Should get correct changes', async () => {
-    const { changes } = await automergeWorker.createDocument('actor1', '1');
+    const { changes } = await automergeWorker.createDocument('monaco-text', 'actor1', '1');
 
     expect(changes.length).toBe(1);
     expect(changes[0].ops.length).toBe(2);
@@ -40,7 +40,7 @@ describe('Automerge api', () => {
 
     const { changes } = createDoc(actor2);
 
-    const state = await automergeWorker.createDocumentFromChanges(actor1, docId, changes);
+    const state = await automergeWorker.createDocumentFromChanges('monaco-text', actor1, docId, changes);
 
     const doc = Automerge.load(state);
 
@@ -54,13 +54,36 @@ describe('Automerge api', () => {
 
     const { changes } = createDoc(actor2, longLorem);
 
-    const state = await automergeWorker.createDocumentFromChanges(actor1, docId, changes);
+    const state = await automergeWorker.createDocumentFromChanges('monaco-text', actor1, docId, changes);
 
     const doc = Automerge.load(state);
 
     expect(doc.text.join('')).toBe(longLorem);
   });
 
+});
+
+beforeAll(async () => {
+  await automergeWorker.setChangeFunction(
+    'monaco-text',
+
+    // update function
+    (doc, operations) => {
+      operations.forEach((op) => {
+        if (op.type === 'delete') {
+          doc.text.deleteAt(op.rangeOffset, op.rangeLength);
+        } else {
+          doc.text.insertAt(op.rangeOffset, ...op.text.split(''));
+        }
+      });
+    },
+
+    // init function
+    (doc, Automerge) => {
+      // eslint-disable-next-line no-param-reassign
+      doc.text = new Automerge.Text();
+    }
+  );
 });
 
 afterAll(async () => {
